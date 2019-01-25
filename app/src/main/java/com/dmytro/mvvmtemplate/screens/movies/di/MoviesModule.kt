@@ -1,5 +1,6 @@
 package com.dmytro.mvvmtemplate.screens.movies.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import com.dmytro.mvvmtemplate.common.di.ActivityScope
@@ -15,7 +16,7 @@ class MoviesModule {
 
     @Provides
     @ActivityScope
-    fun api() = createService(MoviesApi::class.java)
+    fun api(context: Context) = createService(MoviesApi::class.java, context)
 
     @Provides
     @ActivityScope

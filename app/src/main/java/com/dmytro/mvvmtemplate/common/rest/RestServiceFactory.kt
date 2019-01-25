@@ -1,17 +1,20 @@
 package com.dmytro.mvvmtemplate.common.rest
 
+import android.content.Context
 import com.dmytro.mvvmtemplate.BuildConfig
+import com.dmytro.mvvmtemplate.common.rest.interceptors.ConnectionInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-fun <T> createService(clazz: Class<T>) = Retrofit.Builder()
+fun <T> createService(clazz: Class<T>, context: Context) = Retrofit.Builder()
         .addCallAdapterFactory(CallAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BuildConfig.API_ENDPOINT)
         .client(OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor())
+                .addInterceptor(ConnectionInterceptor(context))
                 .build())
         .build()
         .create(clazz)

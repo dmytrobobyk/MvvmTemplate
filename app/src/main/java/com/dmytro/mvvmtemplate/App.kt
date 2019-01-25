@@ -10,7 +10,7 @@ class App : MultiDexApplication() {
     val component by lazy {
         DaggerAppComponent.builder()
                 .context(this)
-                .plus(AppModule())
+                .plus(AppModule(this))
                 .build()
     }
 

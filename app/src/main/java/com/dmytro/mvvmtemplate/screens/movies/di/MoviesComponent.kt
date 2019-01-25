@@ -1,13 +1,13 @@
 package com.dmytro.mvvmtemplate.screens.movies.di
 
-import dagger.BindsInstance
-import dagger.Component
 import com.dmytro.mvvmtemplate.common.di.ActivityScope
 import com.dmytro.mvvmtemplate.di.AppComponent
 import com.dmytro.mvvmtemplate.screens.movies.MoviesActivity
+import dagger.BindsInstance
+import dagger.Component
 
 @ActivityScope
-@Component(modules = [MoviesModule::class], dependencies = [AppComponent::class])
+@Component(dependencies = [AppComponent::class], modules = [MoviesModule::class])
 interface MoviesComponent {
     fun inject(target: MoviesActivity)
 

@@ -9,6 +9,7 @@ import android.view.View
 import com.dmytro.mvvmtemplate.App
 import com.dmytro.mvvmtemplate.R
 import com.dmytro.mvvmtemplate.common.BaseActivity
+import com.dmytro.mvvmtemplate.common.rest.exceptions.NetworkException
 import com.dmytro.mvvmtemplate.common.util.Resource
 import com.dmytro.mvvmtemplate.common.viewmodel.ViewModelFactory
 import com.dmytro.mvvmtemplate.screens.movies.adapter.MoviesAdapter
@@ -27,7 +28,8 @@ class MoviesActivity : BaseActivity() {
                 .build()
     }
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory<MoviesViewModel>
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<MoviesViewModel>
     private lateinit var viewModel: MoviesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +46,7 @@ class MoviesActivity : BaseActivity() {
         initAdapter()
 
         viewModel.moviesList().observe(this, Observer {
-            when(it?.status){
+            when (it?.status) {
                 Resource.Status.LOADING -> {
                     progressBar.visibility = View.VISIBLE
                     moviesRecyclerView.visibility = View.GONE
@@ -57,7 +59,11 @@ class MoviesActivity : BaseActivity() {
                 Resource.Status.ERROR -> {
                     progressBar.visibility = View.GONE
                     moviesRecyclerView.visibility = View.VISIBLE
-                    Snackbar.make(window.decorView, "Error", Snackbar.LENGTH_SHORT).show()
+                    if (it.throwable is NetworkException) {
+                        Snackbar.make(window.decorView, it.throwable.description!!, Snackbar.LENGTH_SHORT).show()
+                    } else {
+                        Snackbar.make(window.decorView, it.throwable?.message.toString(), Snackbar.LENGTH_SHORT).show()
+                    }
                     viewModel.clearLiveData()
                 }
             }
